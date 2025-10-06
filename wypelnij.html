@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stwórz swój dokument</title>
+  <link rel="stylesheet" type="text/css" href="assets/wypelnij.css">
+</head>
+<body>
+  <div class="holder">
+    <h2 style="color:white;">Stwórz swój dokument</h2>
+
+    <form id="docForm" enctype="multipart/form-data">
+      <p>Imię</p>
+      <input type="text" id="imie" name="imie" required>
+
+      <p>Nazwisko</p>
+      <input type="text" id="nazwisko" name="nazwisko" required>
+
+      <p>Data urodzenia</p>
+      <input type="date" id="data" name="data" required>
+
+      <p>Zdjęcie</p>
+      <input type="file" id="zdjecie" name="zdjecie" accept="image/*" required>
+
+      <p>PIN (max 6 znaków)</p>
+      <input type="text" id="pin" name="pin" maxlength="6" required>
+
+      <br><br>
+      <button type="submit" class="btn">Zapisz</button>
+    </form>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("docForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const imie = document.getElementById("imie").value.trim();
+      const nazwisko = document.getElementById("nazwisko").value.trim();
+      const data = document.getElementById("data").value;
+      const pin = document.getElementById("pin").value.trim();
+      const zdjecie = document.getElementById("zdjecie").files[0];
+
+      if (pin.length === 0 || pin.length > 6) {
+        message.textContent = "PIN musi mieć maksymalnie 6 znaków!";
+        message.style.color = "red";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("imie", imie);
+      formData.append("nazwisko", nazwisko);
+      formData.append("data", data);
+      formData.append("pin", pin);
+      formData.append("zdjecie", zdjecie);
+
+      try {
+        const res = await fetch("http://localhost:3000/save-document", {
+          method: "POST",
+          body: formData,
+          credentials: "include"
+        });
+
+        const dataRes = await res.json();
+
+        if (dataRes.success) {
+          message.textContent = "✅ Dokument zapisany!";
+          message.style.color = "lightgreen";
+        } else {
+          message.textContent = "❌ " + dataRes.message;
+          message.style.color = "red";
+        }
+      } catch (err) {
+        console.error(err);
+        message.textContent = "Błąd połączenia z serwerem";
+        message.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>
