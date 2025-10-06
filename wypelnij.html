@@ -60,7 +60,7 @@
       formData.append("zdjecie", zdjecie);
 
       try {
-        const res = await fetch("http://localhost:3000/save-document", {
+        const res = await fetch("https://light-tasha-wspolnicyyt-c9174fb8.koyeb.app/save-document", {
           method: "POST",
           body: formData,
           credentials: "include"
