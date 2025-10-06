@@ -1,12 +1,12 @@
 async function checkCode() {
   const code = document.getElementById("codeInput").value;
 
-  const res = await fetch("http://localhost:3000/check-code", { // 👈 zawsze do backendu!
+  const res = await fetch("https://light-tasha-wspolnicyyt-c9174fb8.koyeb.app/check-code", { // 👈 zawsze do backendu!
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code }),
+    headers: { "Content-Type": "application/json" },
     credentials: "include"
-  });
+});
 
   const data = await res.json();
 
